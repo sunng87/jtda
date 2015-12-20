@@ -1,0 +1,9 @@
+[package]
+name = "jtda"
+version = "0.1.0"
+authors = ["Ning Sun <sunng@about.me>"]
+
+[dependencies]
+lazy_static = "^0.1"
+regex = "^0.1"
+clap = "^1.5"
