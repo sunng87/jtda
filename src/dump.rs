@@ -7,7 +7,7 @@ lazy_static! {
     static ref THREAD_DATA_MATCHER: Regex = Regex::new("\"(.+?)\"( daemon)? prio=(\\d+) tid=(\\S+) nid=(\\S+)").unwrap();
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Copy, Clone)]
 pub enum JThreadState {
     Waiting,
     TimedWaiting,
@@ -46,13 +46,13 @@ fn test_state_parser() {
 
 #[derive(Debug, PartialEq)]
 pub struct JThreadInfo<'a> {
-    name: &'a str,
-    daemon: bool,
-    priority: &'a str,
-    thread_id: &'a str,
-    native_id: &'a str,
-    state: Option<JThreadState>,
-    stacktrace: Option<&'a str>
+    pub name: &'a str,
+    pub daemon: bool,
+    pub priority: &'a str,
+    pub thread_id: &'a str,
+    pub native_id: &'a str,
+    pub state: Option<JThreadState>,
+    pub stacktrace: Option<&'a str>
 }
 
 impl<'a> From<&'a str> for JThreadInfo<'a> {
@@ -148,9 +148,9 @@ fn test_thread_info_line() {
 
 #[derive(Debug, PartialEq)]
 pub struct JThreadDump<'a> {
-    timestamp: &'a str,
-    jvm_info: &'a str,
-    threads: Vec<JThreadInfo<'a>>
+    pub timestamp: &'a str,
+    pub jvm_info: &'a str,
+    pub threads: Vec<JThreadInfo<'a>>
 }
 
 impl<'a> From<&'a str> for JThreadDump<'a> {

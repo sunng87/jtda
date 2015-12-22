@@ -4,6 +4,7 @@ extern crate regex;
 extern crate clap;
 
 mod dump;
+mod analyze;
 
 use std::path::Path;
 use std::io;
@@ -35,7 +36,25 @@ fn main() {
     match load_from_io(matches.value_of("file")) {
         Ok(s) => {
             let tda = dump::JThreadDump::from(s.as_ref());
-            println!("{:?}", tda);
+
+            let result = analyze::by_state(&tda);
+            for (k, v) in result.iter() {
+                println!("{:?}", k);
+                for t in v.iter() {
+                    println!("\t\t{}", t.name);
+                }
+            }
+
+            println!("=================================");
+
+            let result2 = analyze::by_stacktrace(&tda);
+            for (k, v) in result2.iter() {
+                for t in v.iter() {
+                    println!("{}", t.name);
+                }
+
+                println!("{}", k);
+            }
         },
         Err(e) => {
             panic!(format!("Failed to load dump: {}", e))
